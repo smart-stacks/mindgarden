@@ -9,6 +9,7 @@ const TopNavigation: React.FC = () => {
   const navItems = [
     { path: '/agents', label: 'Meet the Agents' },
     { path: '/faq', label: 'FAQ' },
+    { path: '/login', label: 'Login' },
   ]
   
   const emergencyItem = { path: '/emergency', label: 'Emergency', icon: '🚨', isEmergency: true }
@@ -28,7 +29,7 @@ const TopNavigation: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               className="flex items-center"
             >
-              <h1 className="text-2xl font-bold text-gray-800">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
                 🌱 MindGarden
               </h1>
             </motion.div>
@@ -72,7 +73,7 @@ const TopNavigation: React.FC = () => {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={toggleMobileMenu}
-              className="text-gray-600 hover:text-gray-800 focus:outline-none p-2"
+              className="text-gray-600 hover:text-gray-800 focus:outline-none p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
             >
               <div className="w-6 h-6 flex flex-col justify-center items-center">
                 <span className={`block w-5 h-0.5 bg-current transform transition duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'}`}></span>

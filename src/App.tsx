@@ -2,7 +2,6 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import TopNavigation from './components/TopNavigation.tsx'
 import Navigation from './components/Navigation.tsx'
-import HomePage from './pages/HomePage.tsx'
 import ChatPage from './pages/ChatPage.tsx'
 import PeersPage from './pages/PeersPage.tsx'
 import ResourcesPage from './pages/ResourcesPage.tsx'
@@ -11,6 +10,7 @@ import MonitorPage from './pages/MonitorPage.tsx'
 import AgentsPage from './pages/AgentsPage.tsx'
 import FAQPage from './pages/FAQPage.tsx'
 import EmergencyPage from './pages/EmergencyPage.tsx'
+import LoginPage from './pages/LoginPage.tsx'
 
 const App: React.FC = () => {
   return (
@@ -23,6 +23,7 @@ const App: React.FC = () => {
         <main className="pt-28 pb-28">
           <Routes>
             <Route path="/" element={<Navigate to="/chat" replace />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/agents" element={<AgentsPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/emergency" element={<EmergencyPage />} />
