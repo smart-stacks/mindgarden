@@ -13,6 +13,12 @@ RUN npm ci
 # Copy all files
 COPY . .
 
+# Copy .env file if it exists
+COPY .env* ./
+
+# Print environment for debugging (will be removed in production)
+RUN if [ -f .env ]; then cat .env; fi
+
 # Build the app
 RUN npm run build
 

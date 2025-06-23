@@ -45,7 +45,10 @@ interface AuthProviderProps {
 }
 
 // Create the API URL based on environment
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080' || 'http://localhost:8081';
+const API_URL = import.meta.env.VITE_API_URL || 'https://mindgarden-6xntrakg7q-nw.a.run.app/';
+
+// Log the API URL for debugging
+console.log('API URL being used:', API_URL);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -223,8 +226,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Remove default auth header
     delete axios.defaults.headers.common['Authorization'];
     
+    // Explicitly set user to null to trigger isAuthenticated update
     setUser(null);
     setIsGuest(false);
+    
+    console.log('Logout called, user state cleared');
   };
 
   // Compute authentication status
