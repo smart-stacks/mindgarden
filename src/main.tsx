@@ -7,7 +7,10 @@ import { AuthProvider } from './contexts/AuthContext'
 import './index.css'
 
 // Get Google Client ID from environment variable
-const googleClientId = import.meta.env.GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+// Debug: Check if the client ID is loaded correctly
+console.log('Google Client ID:', googleClientId ? 'ID is present' : 'ID is missing');
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
