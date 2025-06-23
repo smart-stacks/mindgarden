@@ -27,7 +27,7 @@ env:
   REGION: europe-west2
   REPOSITORY: mindgarden
   IMAGE_NAME: frontend
-  SERVICE_NAME: mindgarden
+  SERVICE_NAME: mindgarden-app
   SERVICE_ACCOUNT: github-mindgarden-frontend@static-concept-459810-q7.iam.gserviceaccount.com
   LOGS_BUCKET: static-concept-459810-q7_cloudbuild_logs
 
