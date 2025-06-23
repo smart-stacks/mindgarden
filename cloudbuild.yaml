@@ -7,6 +7,7 @@ steps:
       - |
         gcloud secrets versions access latest --secret=GOOGLE_CLIENT_ID > /workspace/google_client_id.txt
         echo "VITE_GOOGLE_CLIENT_ID=$(cat /workspace/google_client_id.txt)" > /workspace/.env
+        echo "VITE_API_URL=${_VITE_API_URL}" >> /workspace/.env
         cat /workspace/.env
   
   # Build the container image with access to the .env file

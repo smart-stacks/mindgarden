@@ -45,7 +45,10 @@ interface AuthProviderProps {
 }
 
 // Create the API URL based on environment
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080' || 'http://localhost:8081';
+const API_URL = import.meta.env.VITE_API_URL || 'https://mindgarden-6xntrakg7q-nw.a.run.app/';
+
+// Log the API URL for debugging
+console.log('API URL being used:', API_URL);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
