@@ -28,9 +28,6 @@ images:
 
 substitutions:
   _REGION: europe-west2
-  _REPOSITORY: brainbloom
+  _REPOSITORY: mindgarden
   _IMAGE_NAME: frontend
   _SERVICE_NAME: mindgarden
-  # Add these to avoid errors in case they're referenced elsewhere
-  _BACKEND_SERVICE_NAME: "not-used"
-  _HASH: "not-used"
