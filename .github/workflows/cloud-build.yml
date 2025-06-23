@@ -30,10 +30,8 @@ env:
   SERVICE_NAME: mindgarden-app
   SERVICE_ACCOUNT: github-mindgarden-frontend@static-concept-459810-q7.iam.gserviceaccount.com
   LOGS_BUCKET: static-concept-459810-q7_cloudbuild_logs
-  # Google Authentication variables
-  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  # Frontend environment variables
+  VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
   VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
 jobs:
@@ -67,7 +65,7 @@ jobs:
     - name: Submit Cloud Build job
       run: |
         gcloud builds submit --config=cloudbuild.yaml \
-          --substitutions=_REGION=$REGION,_REPOSITORY=$REPOSITORY,_IMAGE_NAME=$IMAGE_NAME,_SERVICE_NAME=$SERVICE_NAME,_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,_GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,_JWT_SECRET=$JWT_SECRET,_VITE_API_URL=$VITE_API_URL \
+          --substitutions=_REGION=$REGION,_REPOSITORY=$REPOSITORY,_IMAGE_NAME=$IMAGE_NAME,_SERVICE_NAME=$SERVICE_NAME,_VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID,_VITE_API_URL=$VITE_API_URL \
           --async \
           .
 

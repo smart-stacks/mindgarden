@@ -4,6 +4,7 @@ steps:
     args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}', '.']
     env:
       - 'GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}'
+      - 'VITE_GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID}'
       - 'VITE_API_URL=${_VITE_API_URL}'
   # Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -23,7 +24,7 @@ steps:
       - '--memory=512Mi'
       - '--min-instances=0'
       - '--max-instances=10'
-      - '--set-env-vars=GOOGLE_CLIENT_ID=${_GOOGLE_CLIENT_ID},GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET},JWT_SECRET=${_JWT_SECRET}'
+      - '--set-secrets=GOOGLE_CLIENT_ID=google-client-id:latest,GOOGLE_CLIENT_SECRET=google-client-secret:latest,JWT_SECRET=jwt-secret:latest'
 
 images:
   - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}'
@@ -33,3 +34,4 @@ substitutions:
   _REPOSITORY: mindgarden
   _IMAGE_NAME: frontend
   _SERVICE_NAME: mindgarden-app
+  _VITE_GOOGLE_CLIENT_ID: ""  # Will be provided by GitHub Actions
