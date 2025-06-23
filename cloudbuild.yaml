@@ -31,4 +31,3 @@ substitutions:
   _REPOSITORY: mindgarden
   _IMAGE_NAME: frontend
   _SERVICE_NAME: mindgarden-app
-  _SERVICE_ACCOUNT: github-mindgarden-frontend@static-concept-459810-q7.iam.gserviceaccount.com
