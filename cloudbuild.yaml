@@ -1,0 +1,42 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}', '.']
+    env:
+      - 'VITE_GOOGLE_CLIENT_ID=${_VITE_GOOGLE_CLIENT_ID}'
+      - 'VITE_API_URL=${_VITE_API_URL}'
+  # Push the container image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}']
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--memory=512Mi'
+      - '--min-instances=0'
+      - '--max-instances=10'
+      - '--set-env-vars'
+      - 'ENVIRONMENT=production'
+      - '--update-secrets'
+      - 'JWT_SECRET=JWT_SECRET:latest'
+      - '--update-secrets'
+      - 'VITE_GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest'
+      - '--update-secrets'
+      - 'VITE_API_URL=VITE_API_URL:latest'
+images:
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}'
+
+substitutions:
+  _REGION: europe-west2
+  _REPOSITORY: mindgarden
+  _IMAGE_NAME: frontend
+  _SERVICE_NAME: mindgarden-app
+  _VITE_GOOGLE_CLIENT_ID: ""  # Will be provided by GitHub Actions

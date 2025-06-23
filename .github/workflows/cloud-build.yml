@@ -1,0 +1,79 @@
+name: Deploy MindGarden to Cloud Run
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**'  # Only trigger on changes to backend files
+      - '!.github/**'  # Ignore changes to GitHub files
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**'  # Only trigger on changes to backend files
+      - '!.github/**'  # Ignore changes to GitHub files
+
+  workflow_dispatch:  # Allows manual triggering
+    inputs:
+      region:
+        description: 'Deployment region'
+        required: true
+        default: 'europe-west2'
+        type: choice
+        options:
+          - 'europe-west2'
+
+env:
+  PROJECT_ID: static-concept-459810-q7
+  REGION: europe-west2
+  REPOSITORY: mindgarden
+  IMAGE_NAME: frontend
+  SERVICE_NAME: mindgarden-app
+  SERVICE_ACCOUNT: github-mindgarden-frontend@static-concept-459810-q7.iam.gserviceaccount.com
+  LOGS_BUCKET: static-concept-459810-q7_cloudbuild_logs
+
+jobs:
+  deploy-mindgarden:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ env.PROJECT_ID }}
+    
+    - name: Authenticate to Google Cloud
+      uses: 'google-github-actions/auth@v2'
+      with:
+        workload_identity_provider: projects/431880575932/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+        service_account: ${{ env.SERVICE_ACCOUNT }}
+        token_format: 'access_token'
+        audience: 'https://iam.googleapis.com/projects/431880575932/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+    
+    - name: Configure Docker for Artifact Registry
+      run: |
+        gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
+    - name: Get frontend secrets from Secret Manager
+      id: get-frontend-secrets
+      run: |
+        # Access the secrets and store them in GitHub's environment file
+        echo "VITE_GOOGLE_CLIENT_ID=$(gcloud secrets versions access latest --secret="GOOGLE_CLIENT_ID")" >> $GITHUB_ENV
+        echo "VITE_API_URL=$(gcloud secrets versions access latest --secret="VITE_API_URL")" >> $GITHUB_ENV
+        echo "Retrieved frontend secrets from Secret Manager"
+        
+    - name: Submit Cloud Build job
+      run: |
+        gcloud builds submit --config=cloudbuild.yaml \
+          --substitutions=_REGION=$REGION,_REPOSITORY=$REPOSITORY,_IMAGE_NAME=$IMAGE_NAME,_SERVICE_NAME=$SERVICE_NAME,_VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID,_VITE_API_URL=$VITE_API_URL \
+          --async \
+          .
+
+    - name: Display deployed service URL
+      run: |
+        echo "MindGarden deployed to: $(gcloud run services describe ${{ env.SERVICE_NAME }} --region=${{ env.REGION }} --format='value(status.url)')"
