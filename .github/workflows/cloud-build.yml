@@ -31,7 +31,6 @@ env:
   SERVICE_ACCOUNT: github-mindgarden-frontend@static-concept-459810-q7.iam.gserviceaccount.com
   LOGS_BUCKET: static-concept-459810-q7_cloudbuild_logs
   # Frontend environment variables
-  VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
   VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
 jobs:
@@ -62,6 +61,13 @@ jobs:
       run: |
         gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
+    - name: Get Google Client ID from Secret Manager
+      id: get-client-id
+      run: |
+        # Access the secret and store it in GitHub's environment file
+        echo "VITE_GOOGLE_CLIENT_ID=$(gcloud secrets versions access latest --secret="google-client-id")" >> $GITHUB_ENV
+        echo "Retrieved Google Client ID from Secret Manager"
+        
     - name: Submit Cloud Build job
       run: |
         gcloud builds submit --config=cloudbuild.yaml \
