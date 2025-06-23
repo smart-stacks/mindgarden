@@ -2,9 +2,6 @@ steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}', '.']
-    env:
-      - 'REACT_APP_API_BASE_URL=https://${_BACKEND_SERVICE_NAME}-${_HASH}.a.run.app'
-      - 'REACT_APP_SOCKET_URL=https://${_BACKEND_SERVICE_NAME}-${_HASH}.a.run.app'
 
   # Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -31,6 +28,9 @@ images:
 
 substitutions:
   _REGION: europe-west2
-  _REPOSITORY: mindgarden
+  _REPOSITORY: brainbloom
   _IMAGE_NAME: frontend
   _SERVICE_NAME: mindgarden
+  # Add these to avoid errors in case they're referenced elsewhere
+  _BACKEND_SERVICE_NAME: "not-used"
+  _HASH: "not-used"
