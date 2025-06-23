@@ -28,10 +28,9 @@ steps:
       - '--update-secrets'
       - 'JWT_SECRET=JWT_SECRET:latest'
       - '--update-secrets'
-      - 'VITE_GOOGLE_CLIENT_ID=VITE_GOOGLE_CLIENT_ID:latest'
+      - 'VITE_GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest'
       - '--update-secrets'
       - 'VITE_API_URL=VITE_API_URL:latest'
-
 images:
   - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}'
 

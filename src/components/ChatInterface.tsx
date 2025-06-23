@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navigation from './Navigation.tsx'
+import { useAuth } from '../contexts/AuthContext'
 
 interface Message {
   id: string
@@ -10,10 +11,17 @@ interface Message {
 }
 
 const ChatInterface: React.FC = () => {
+  const { user, isAuthenticated, logout } = useAuth()
+  
+  // Create welcome message based on authentication status
+  const welcomeMessage = user?.name 
+    ? `Hello ${user.name}! I'm here to support you. How are you feeling today?`
+    : 'Hello! I\'m here to support you. How are you feeling today?'
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! I\'m here to support you. How are you feeling today?',
+      text: welcomeMessage,
       type: 'ai',
       timestamp: new Date()
     }
@@ -138,9 +146,21 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200 p-6 rounded-t-2xl text-center">
-        <h1 className="text-2xl font-bold text-gray-800">You're not alone</h1>
-        <p className="text-md text-gray-600 italic mt-1">
+      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200 p-6 rounded-t-2xl">
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-2xl font-bold text-gray-800">You're not alone</h1>
+          {isAuthenticated && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={logout}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+            >
+              Logout
+            </motion.button>
+          )}
+        </div>
+        <p className="text-md text-gray-600 italic">
           We're here to support and guide you through anything.
         </p>
       </div>
