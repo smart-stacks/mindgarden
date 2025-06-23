@@ -3,7 +3,7 @@ import ChatInterface from '../components/ChatInterface.tsx'
 
 const ChatPage: React.FC = () => {
   return (
-    <div className="h-full bg-white/50 rounded-2xl shadow-lg border border-white/20">
+    <div className="h-[calc(100vh-200px)] bg-white/50 rounded-2xl shadow-lg border border-white/20">
       <ChatInterface />
     </div>
   )

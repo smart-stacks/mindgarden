@@ -223,8 +223,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Remove default auth header
     delete axios.defaults.headers.common['Authorization'];
     
+    // Explicitly set user to null to trigger isAuthenticated update
     setUser(null);
     setIsGuest(false);
+    
+    console.log('Logout called, user state cleared');
   };
 
   // Compute authentication status

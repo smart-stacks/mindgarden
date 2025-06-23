@@ -11,21 +11,45 @@ interface Message {
 }
 
 const ChatInterface: React.FC = () => {
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated } = useAuth()
   
-  // Create welcome message based on authentication status
-  const welcomeMessage = user?.name 
-    ? `Hello ${user.name}! I'm here to support you. How are you feeling today?`
-    : 'Hello! I\'m here to support you. How are you feeling today?'
+  // Log authentication state for debugging purposes
+  useEffect(() => {
+    console.log('Auth state in ChatInterface:', { isAuthenticated, user })
+  }, [isAuthenticated, user])
   
+  // Function to get welcome message based on current auth state
+  const getWelcomeMessage = () => {
+    return user?.name 
+      ? `Hello ${user.name}! I'm here to support you. How are you feeling today?`
+      : 'Hello! I\'m here to support you. How are you feeling today?'
+  }
+  
+  // Initialize messages with welcome message
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: welcomeMessage,
+      text: getWelcomeMessage(),
       type: 'ai',
       timestamp: new Date()
     }
   ])
+  
+  // Update first message when auth state changes
+  useEffect(() => {
+    setMessages(prevMessages => {
+      // Create a copy of the messages array
+      const updatedMessages = [...prevMessages]
+      // Update the first message if it exists
+      if (updatedMessages.length > 0) {
+        updatedMessages[0] = {
+          ...updatedMessages[0],
+          text: getWelcomeMessage()
+        }
+      }
+      return updatedMessages
+    })
+  }, [user, isAuthenticated])
   const [inputText, setInputText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -149,16 +173,6 @@ const ChatInterface: React.FC = () => {
       <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200 p-6 rounded-t-2xl">
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-2xl font-bold text-gray-800">You're not alone</h1>
-          {isAuthenticated && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={logout}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium transition-colors"
-            >
-              Logout
-            </motion.button>
-          )}
         </div>
         <p className="text-md text-gray-600 italic">
           We're here to support and guide you through anything.
