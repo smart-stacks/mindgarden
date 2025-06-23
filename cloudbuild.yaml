@@ -23,7 +23,14 @@ steps:
       - '--memory=512Mi'
       - '--min-instances=0'
       - '--max-instances=10'
-      - '--set-secrets=GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest,GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest,JWT_SECRET=JWT_SECRET:latest'
+      - '--set-env-vars'
+      - 'ENVIRONMENT=production'
+      - '--update-secrets'
+      - 'JWT_SECRET=JWT_SECRET:latest'
+      - '--update-secrets'
+      - 'VITE_GOOGLE_CLIENT_ID=VITE_GOOGLE_CLIENT_ID:latest'
+      - '--update-secrets'
+      - 'VITE_API_URL=VITE_API_URL:latest'
 
 images:
   - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE_NAME}'
