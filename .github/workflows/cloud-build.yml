@@ -30,6 +30,11 @@ env:
   SERVICE_NAME: mindgarden-app
   SERVICE_ACCOUNT: github-mindgarden-frontend@static-concept-459810-q7.iam.gserviceaccount.com
   LOGS_BUCKET: static-concept-459810-q7_cloudbuild_logs
+  # Google Authentication variables
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
 jobs:
   deploy-mindgarden:
@@ -59,18 +64,13 @@ jobs:
       run: |
         gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
-    - name: Build and Deploy MindGarden
+    - name: Submit Cloud Build job
       run: |
-        # Build and submit with Cloud Build using custom logs bucket
         gcloud builds submit --config=cloudbuild.yaml \
-        --async \
-        --substitutions=\
-        _REGION=${{ env.REGION }},\
-        _REPOSITORY=${{ env.REPOSITORY }},\
-        _IMAGE_NAME=${{ env.IMAGE_NAME }},\
-        _SERVICE_NAME=${{ env.SERVICE_NAME }}
-        
+          --substitutions=_REGION=$REGION,_REPOSITORY=$REPOSITORY,_IMAGE_NAME=$IMAGE_NAME,_SERVICE_NAME=$SERVICE_NAME,_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID,_GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET,_JWT_SECRET=$JWT_SECRET,_VITE_API_URL=$VITE_API_URL \
+          --gcs-log-dir=gs://$LOGS_BUCKET \
+          .
+
     - name: Display deployed service URL
       run: |
         echo "MindGarden deployed to: $(gcloud run services describe ${{ env.SERVICE_NAME }} --region=${{ env.REGION }} --format='value(status.url)')"
-

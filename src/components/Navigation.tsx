@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 const Navigation: React.FC = () => {
   const location = useLocation()
+  const { isAuthenticated, isGuest } = useAuth()
 
   const navItems = [
     { path: '/chat', label: 'Chat', icon: '💬' },
@@ -29,9 +31,19 @@ const Navigation: React.FC = () => {
             <span className="text-xs font-medium">{item.label}</span>
           </Link>
         ))}
+        
+        {isGuest && (
+          <Link
+            to="/login"
+            className="bottom-nav-item inactive hover:text-[#CBAACB] transition-colors"
+          >
+            <span className="text-xl mb-1">🔒</span>
+            <span className="text-xs font-medium">Login</span>
+          </Link>
+        )}
       </div>
     </nav>
   )
 }
 
-export default Navigation 
+export default Navigation

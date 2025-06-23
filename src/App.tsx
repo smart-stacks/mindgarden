@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import TopNavigation from './components/TopNavigation.tsx'
 import Navigation from './components/Navigation.tsx'
 import ChatPage from './pages/ChatPage.tsx'
@@ -14,7 +14,6 @@ import LoginPage from './pages/LoginPage.tsx'
 
 const App: React.FC = () => {
   return (
-    <Router>
       <div className="min-h-screen bg-background-soft">
         <header className="fixed top-0 left-0 right-0 z-50">
           <TopNavigation />
@@ -41,7 +40,6 @@ const App: React.FC = () => {
           </div>
         </footer>
       </div>
-    </Router>
   )
 }
 
