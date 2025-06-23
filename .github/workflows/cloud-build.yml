@@ -65,7 +65,7 @@ jobs:
       id: get-client-id
       run: |
         # Access the secret and store it in GitHub's environment file
-        echo "VITE_GOOGLE_CLIENT_ID=$(gcloud secrets versions access latest --secret="google-client-id")" >> $GITHUB_ENV
+        echo "VITE_GOOGLE_CLIENT_ID=$(gcloud secrets versions access latest --secret="GOOGLE_CLIENT_ID")" >> $GITHUB_ENV
         echo "Retrieved Google Client ID from Secret Manager"
         
     - name: Submit Cloud Build job
